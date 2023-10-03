@@ -54,13 +54,16 @@ export default class ProductsController {
     return response.json(product);
   }
 
-  public async deleteProduct(request: Request, response: Response) {
+  public async deleteProduct(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
     const { id } = request.params;
 
     const deleteProduct = new DeleteProductService();
 
-    const product = await deleteProduct.execute({ id });
+    await deleteProduct.execute({ id });
 
-    return response.json(product);
+    return response.json({ message: 'product removed' });
   }
 }
