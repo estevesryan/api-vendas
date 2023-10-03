@@ -14,10 +14,10 @@ class Product {
   @Column('int')
   quantity: number;
 
-  @Column('timestamp with local time zone')
+  @Column('timestamp with time zone')
   created_at: Date;
 
-  @Column('timestamp with local time zone')
+  @Column('timestamp with time zone')
   updated_at: Date;
 }
 
