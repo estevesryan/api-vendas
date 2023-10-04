@@ -1,7 +1,7 @@
-import { getCustomRepository } from 'typeorm';
-import { ProductRepository } from '../typeorm/repositories/ProductsRepository';
-import Product from '../typeorm/entities/Product';
 import AppError from '@shared/errors/AppError';
+import { getCustomRepository } from 'typeorm';
+import Product from '../typeorm/entities/Product';
+import { ProductRepository } from '../typeorm/repositories/ProductsRepository';
 
 interface IRequest {
   id: string;
@@ -10,7 +10,7 @@ interface IRequest {
   quantity: number;
 }
 
-export default class UpdateProductService {
+class UpdateProductService {
   public async execute({
     id,
     name,
@@ -18,17 +18,17 @@ export default class UpdateProductService {
     quantity,
   }: IRequest): Promise<Product> {
     const productsRepository = getCustomRepository(ProductRepository);
-    const productsExists = await productsRepository.findByName(name);
+
     const product = await productsRepository.findOne(id);
 
-    // verifica se existe o produto
     if (!product) {
-      throw new AppError('Product doest exist');
+      throw new AppError('Product not found.');
     }
 
-    // nao permite que o usuario utilize o msm nome
-    if (productsExists && name !== product.name) {
-      throw new AppError('there is already one product with this name');
+    const productExists = await productsRepository.findByName(name);
+
+    if (productExists) {
+      throw new AppError('There is already one product with this name');
     }
 
     product.name = name;
@@ -40,3 +40,5 @@ export default class UpdateProductService {
     return product;
   }
 }
+
+export default UpdateProductService;
